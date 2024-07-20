@@ -10,10 +10,21 @@
     agent any
     stages{
        stage('build jar'){
+           environment{
+                       // assuming you have stored the credentials with this name
+                       DOCKER_HUB = credentials('dockerhub-creds')
+                   }
           steps{
+           // There might be a warning.
+         sh 'docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}'
          sh "mvn clean package -DskipTests"
          }}
 
 
     }
+      post {
+            always {
+                sh 'docker logout'
+            }
+        }
       }
