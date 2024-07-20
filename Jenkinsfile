@@ -10,6 +10,18 @@
     agent any
     stages{
        stage('build jar'){
+
+          steps{
+         sh "mvn clean package -DskipTests"
+         }}
+stage('pull image '){
+
+          steps{
+
+         sh "docker build -t=rokaya1525/selenium ."
+         }}
+
+  stage('push image '){
            environment{
                        // assuming you have stored the credentials with this name
                        DOCKER_HUB = credentials('dockerhub-creds')
@@ -17,10 +29,8 @@
           steps{
            // There might be a warning.
          sh 'docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}'
-         sh "mvn clean package -DskipTests"
+         sh "docker push rokaya1525/selenium"
          }}
-
-
     }
       post {
             always {
